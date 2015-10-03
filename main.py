@@ -1,4 +1,5 @@
 import random, re, abc
+from room import Office, LivingSpace, Room
 
 print "awesome room allocation in amity"
 
@@ -8,124 +9,10 @@ def strip_whitespaces(line_to_format):
     return match.groups()
 
 
-class Room(object):
-    __metaclass__ = abc.ABCMeta  # indicate that this is an ABC(Abstract base class)
-
-    def __init__(self):
-        self.no_of_occupants = 0
-        self.rooms = {}
-
-    @abc.abstractproperty
-    def allocate(self, fullname, role):
-        pass
-
-    @staticmethod
-    def search(values, search_for):  # there is no self there because of the static
-        for k in values:
-            for v in values[k]:
-                if search_for in v:
-                    return search_for
-        return None
-
-
-class Office(Room):
-
-    def __init__(self):
-        self.staff_offices_available = {"finance": [],
-                                        "intern": [],
-                                        "tech trainers": [],
-                                        "success department": [],
-                                        "kitchen": []}
-        self.fellow_offices_available = {'pythonroom': [],
-                                         'javascripter': [],
-                                         'Rubyist': [],
-                                         'ElePHPants': [],
-                                         'Androiders': []}
-        self.no_of_occupants = 6
-
-    # def set_staff_office(self, office_name):
-    #     return self.staff_offices_available.append(office_name)
-
-    def get_offices(self):
-        return self.staff_offices_available
-
-    # def set_fellow_office(self, office_name):
-    #     return self.fellow_offices_available.append(office_name)
-
-
-
-    def allocate(self, fullname, role):
-
-        for i in range(100):
-            # room = random.choice(self.staff_offices_available.values())
-            room = self.staff_offices_available.values() if role == "STAFF" else self.fellow_offices_available.values()
-            room = random.choice(room)
-            if len(room) < self.no_of_occupants:
-                room.append("%s " % fullname)
-                break
-
-        return self.staff_offices_available
-
-    def confirm_allocate(self):
-        pass
-
-    # def get_member_details(self, role):
-    #     room = self.staff_offices_available if role == "STAFF" else self.fellow_offices_available
-    #     print room
-    #     for key, value in room.iteritems():
-    #         print key, len(value)
-
-    def get_member_details(self, role):
-        room = self.staff_offices_available if role == "STAFF" else self.fellow_offices_available
-        # print room
-        for key, value in room.iteritems():
-            print key + " (OFFICE)\n", value
-
-
-class LivingSpace(Room):
-
-    def __init__(self):
-        self.no_of_occupants = 4
-        self.rooms_available = {"sleeproom": [],
-                                "danceroom": [],
-                                "coderoom": [],
-                                "cafeteria": [],
-                                "carat": [],
-                                "rayyan": [],
-                                "glass": [],
-                                "rock": [],
-                                "fire": [],
-                                "storm": []}
-
-    def allocate(self, fullname, role):
-        if role == "STAFF":
-            return False
-        else:
-            for i in range(100):
-                room = random.choice(self.rooms_available.values())
-                if len(room) < self.no_of_occupants:
-                    room.append("%s " % fullname)
-                    break
-
-        return self.rooms_available
-
-    def get_member_details(self, office_name):
-        room = self.rooms_available
-        print self.rooms_available[office_name]
-        list_size_of_office = []
-        for key, value in self.rooms_available.iteritems():
-            print key, len(value)
-            list_size_of_office.append(len(value))
-
-    def get_member_details_without_room_name(self):
-        room = self.rooms_available
-        # print room
-        for key, value in room.iteritems():
-            print key + " (LIVING SPACE)\n", value
-
-
 class Employee(object):
-    pass
+
+    def set_staff(self):
+        pass
 
 
 class Fellow(Employee):
@@ -133,7 +20,16 @@ class Fellow(Employee):
 
 
 class Staff(Employee):
-    pass
+
+
+
+    def find_room_allocated(self):
+        pass
+
+    def allocate_office(self):
+        pass
+
+
 
 
 class ReadFromTextFile(object):
@@ -148,7 +44,8 @@ class ReadFromTextFile(object):
                 fullname, role, choice = strip_whitespaces(line)
                 if role == "STAFF":
                     self.staff_office.allocate(fullname, role)
-                    print 'Living Space is only allocated to fellows try applying to become a fellow on http://apply.andela.co'
+                    print 'Living Space is only allocated to fellows try \
+                     applying to become a fellow on http://apply.andela.co'
                 elif choice == "Y":
                     self.staff_office.allocate(fullname, role)
                     self.fellow_living_space.allocate(fullname, role)
