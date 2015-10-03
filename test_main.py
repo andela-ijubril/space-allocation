@@ -28,8 +28,8 @@ class TestingOfficeAllocation(unittest.TestCase):
         self.ofc.allocate("Prosper", "STAFF")
         self.assertNotEqual("Prosper", self.ofc.search(self.ofc.fellow_offices_available, "Prosper"), msg="You are not a fellow")
 
-    def test_can_allocate_office_to_staff(self):
-        self.read_txt.read_then_allocate()
+    # def test_can_allocate_office_to_staff(self):
+    #     self.read_txt.read_then_allocate()
         # self.assertLessEqual(7, )
 
     def test_staff_is_not_allocated_to_living_space(self):
@@ -37,8 +37,8 @@ class TestingOfficeAllocation(unittest.TestCase):
         # self.assertIn("Nadayar", self.living_space.rooms_available)
         self.assertNotEqual("Nadayar", self.ofc.search(self.living_space.rooms_available, "Nadayar"), msg="You are not a fellow")
 
-    def test_people_allocated_to_offices_are_not_more_than_six(self):
-        pass
+    # def test_people_allocated_to_offices_are_not_more_than_six(self):
+
 
     def test_people_allocated_to_living_space_are_not_more_than_four(self):
         pass
@@ -46,6 +46,26 @@ class TestingOfficeAllocation(unittest.TestCase):
     def test_fellow_not_interested_in_room_not_given(self):
         self.read_txt.fellow_living_space.allocate("NWAMINA PHILLIPS", "FELLOW")
         self.assertNotEqual("NWAMINA PHILLIPS", self.ofc.search(self.living_space.rooms_available, "NWAMINA PHILLIPS"), msg="You are not a fellow")
+
+    def test_can_add_to_the_list_of_staff_office(self):
+        self.ofc.add_staff_office("ground")
+        self.assertIn("ground", self.ofc.staff_offices_available)
+
+    def test_can_add_to_the_list_of_fellow_office(self):
+        self.ofc.add_fellow_office("ground")
+        self.assertIn("ground", self.ofc.fellow_offices_available)
+
+    def test_can_remove_office(self):
+        self.ofc.remove_staff_office("finance")
+        self.assertNotIn("finance", self.ofc.staff_offices_available)
+
+    def test_can_rename_office(self):
+        self.ofc.rename_office_name("finance", "ileowo")
+        self.assertIn("ileowo", self.ofc.staff_offices_available)
+        self.assertNotIn("finance", self.ofc.staff_offices_available)
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,7 +1,7 @@
 import random, re, abc
 from room import Office, LivingSpace, Room
 
-print "awesome room allocation in amity"
+# print "awesome room allocation in amity"
 
 
 def strip_whitespaces(line_to_format):
@@ -30,11 +30,9 @@ class Staff(Employee):
         pass
 
 
-
-
 class ReadFromTextFile(object):
     fellow_living_space = LivingSpace()
-    staff_office = Office()
+    office = Office()
 
     def read_then_allocate(self):
         with open("input.txt", 'r') as f:
@@ -43,22 +41,27 @@ class ReadFromTextFile(object):
             for line in data:
                 fullname, role, choice = strip_whitespaces(line)
                 if role == "STAFF":
-                    self.staff_office.allocate(fullname, role)
-                    print 'Living Space is only allocated to fellows try \
-                     applying to become a fellow on http://apply.andela.co'
+                    self.office.allocate(fullname, role)
+                    # print 'Living Space is only allocated to fellows try \
+                    #  applying to become a fellow on http://apply.andela.co'
                 elif choice == "Y":
-                    self.staff_office.allocate(fullname, role)
+                    self.office.allocate(fullname, role)
                     self.fellow_living_space.allocate(fullname, role)
                 else:
-                    self.staff_office.allocate(fullname, role)
-                    print "you are not interested in our room abi... Diaris God o"
+                    self.office.allocate(fullname, role)
+                    # print "you are not interested in our room abi... Diaris God o"
 
                 # print "fullname is %s and he is a %s he wants %s house" %(fullname, role, choice)
-
-        return self.staff_office.get_member_details("STAFF")
+        f = open('output.txt', 'w')
+        # for item in
+        # f.write('\n'.join(self.staff_office.get_member_details("STAFF")))
+        print >> f, self.office.get_member_details("STAFF"), self.office.get_member_details("FELLOW")
+        f.close()
+        print type(self.office.get_member_details("FELLOW"))
+        return self.office.get_member_details("STAFF"), self.office.get_member_details("FELLOW")
 
     def print_output(self):
-        return self.staff_office.get_member_details("FELLOW")
+        return self.office.get_member_details("FELLOW")
 
     def print_living_spaace_output(self):
         return self.fellow_living_space.get_member_details_without_room_name()
@@ -70,17 +73,30 @@ class ReadFromTextFile(object):
         #     MEMBER 1, MEMBER 2, MEMBER 3
 
     def get_room_arrangement(self):
-        return self.staff_office.get_member_details("FELLOW")
+        return self.office.get_member_details("FELLOW")
 
 
-# def file_len(fname):
-#     with open(fname) as f:
-#         for i, l in enumerate(f):
-#             pass
-#     return i + 1
-#
-#
-# num_lines = sum(1 for line in open('input.txt'))
-# # print num_lines
-#
-# # print file_len("input.txt")
+    def read_data(self, role):
+        fellow_names = []
+        staff_names = []
+        with open("input.txt", 'r') as f:
+            data = f.readlines()
+
+            for line in data:
+                fullname, role, choice = strip_whitespaces(line)
+                if role == "STAFF":
+                    staff_names.append(fullname)
+                else:
+                    fellow_names.append(fullname)
+        names = staff_names if role == "STAFF" else fellow_names
+        return names
+
+    def read_return_all_names(self):
+        names = []
+        with open("input.txt", 'r') as f:
+            data = f.readlines()
+
+            for line in data:
+                fullname, role, choice = strip_whitespaces(line)
+                names.append(fullname)
+        return names

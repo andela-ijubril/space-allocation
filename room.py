@@ -1,6 +1,7 @@
 import abc
 import random
 
+
 __author__ = 'Jubril'
 
 
@@ -24,14 +25,6 @@ class Room(object):
         return None
 
 
-    # Todo: Find room by name
-    # Todo: Add rooms
-    # Todo: Update room count
-    # Todo: remove rooms
-    # Todo: all rooms filled
-
-
-
 class Office(Room):
 
     def __init__(self):
@@ -46,7 +39,7 @@ class Office(Room):
                                          'Rubyist': [],
                                          'ElePHPants': [],
                                          'Androiders': []}
-        self.no_of_occupants = 6
+        self.no_of_occupants = 4
         self.available_space = (len(self.staff_offices_available) + len(
             self.fellow_offices_available)) * self.no_of_occupants
 
@@ -57,6 +50,11 @@ class Office(Room):
 
     def list_staff_offices(self):
         return self.staff_offices_available
+
+    def list_all_office(self):
+        all_office = self.staff_offices_available.copy()
+        all_office.update(self.fellow_offices_available)
+        return all_office
 
     def add_fellow_office(self, office_name):
         self.fellow_offices_available[office_name] = []
@@ -69,7 +67,13 @@ class Office(Room):
             return office_name + "is not currently a valid office name"
 
     def rename_office_name(self, old_name, new_name):
-        pass # mydict[new_key] = mydict.pop(old_key)
+        if old_name in self.staff_offices_available: # or self.fellow_offices_available:
+            try:
+                self.staff_offices_available[new_name] = self.staff_offices_available.pop(old_name)
+            except:
+                return "The operation wasn't successful"
+        else:
+            return "Office not found in list"
 
     # or
     # if newkey!=oldkey:
@@ -77,13 +81,26 @@ class Office(Room):
     #   del dictionary[oldkey]
 
     def no_of_occupant_in_the_room(self, office):
-        pass
+        if office in self.staff_offices_available:
+            return "finance currently has %s occupants" % len(self.staff_offices_available[office])
+        else:
+            return office + "not a valid name"
 
     def list_of_filled_rooms(self):
-        pass
+        filled_offices = []
+        for key, value in self.staff_offices_available.iteritems():
+            # print key + " (OFFICE)\n", value
+            if len(value) >= self.no_of_occupants:
+                filled_offices.append(key)
+        print "The list of the filled offices are displayed below \n",  filled_offices
 
     def list_of_available_rooms(self):
-        pass
+        available_rooms = []
+        for key, value in self.staff_offices_available.iteritems():
+            # print key + " (OFFICE)\n", value
+            if len(value) < self.no_of_occupants:
+                available_rooms.append(key)
+        print "The list of the filled offices are displayed below \n",  available_rooms
 
     def allocate(self, fullname, role):
 
@@ -96,6 +113,16 @@ class Office(Room):
                 break
 
         return self.staff_offices_available
+
+    def list_of_unallocated_by_role(self, role):
+        room = self.staff_offices_available if role == "STAFF" else self.fellow_offices_available
+        # print room
+        list_of_occupants = []
+        for key, value in room.iteritems():
+            list_of_occupants += value
+        return list_of_occupants
+
+
 
     def confirm_allocate(self):
         pass
@@ -110,7 +137,7 @@ class Office(Room):
         room = self.staff_offices_available if role == "STAFF" else self.fellow_offices_available
         # print room
         for key, value in room.iteritems():
-            print key + " (OFFICE)\n", value
+            print (key + " (OFFICE)\n", value)
 
 
 class LivingSpace(Room):
